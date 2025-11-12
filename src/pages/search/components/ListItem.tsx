@@ -1,29 +1,33 @@
-import { useQuery } from "@tanstack/react-query"
-import { useNavigate } from "react-router"
-import { getConfiguration } from "../../../api/configuration"
-import type { Movie } from "../../../types/movie"
-import { getTmdbImageUrl } from "../../../utils/tmdbClient"
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router';
+import { getConfiguration } from '../../../api/configuration';
+import type { Movie } from '../../../types/movie';
+import { getTmdbImageUrl } from '../../../utils/tmdbClient';
 
 export default function ListItem({ movie }: { movie: Movie }) {
   const { data: cfg } = useQuery({
-    queryKey: ["tmdbConfig"],
+    queryKey: ['tmdbConfig'],
     queryFn: getConfiguration,
     staleTime: 1000 * 60 * 60 * 24,
-  })
+  });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const goToDetail = () => {
-    navigate(`/detail/${movie.id}`)
-  }
+    navigate(`/detail/${movie.id}`);
+  };
 
   return (
-    <li className="list-row cursor-pointer" key={movie.id} onClick={goToDetail}>
+    <li
+      className="list-row cursor-pointer hover:bg-base-200"
+      key={movie.id}
+      onClick={goToDetail}
+    >
       <div>
         {cfg?.images && (
           <img
             width={100}
-            src={getTmdbImageUrl(movie.poster_path, "poster", cfg?.images)}
+            src={getTmdbImageUrl(movie.poster_path, 'poster', cfg?.images)}
             alt={movie.title}
           />
         )}
@@ -36,5 +40,5 @@ export default function ListItem({ movie }: { movie: Movie }) {
         </p>
       </div>
     </li>
-  )
+  );
 }
