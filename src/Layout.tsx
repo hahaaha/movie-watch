@@ -1,6 +1,18 @@
-import { Link, Outlet } from "react-router"
+import { useEffect } from 'react';
+import { Link, Outlet } from 'react-router';
+import { useUserInfo } from './hooks/api/useUserInfo';
+import { useUserInfoStore } from './store/useUserInfoStore';
 
 export default function Layout() {
+  const { data: userInfo } = useUserInfo();
+  const { setUserInfo } = useUserInfoStore();
+
+  useEffect(() => {
+    if (userInfo) {
+      setUserInfo(userInfo);
+    }
+  }, [userInfo]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="navbar bg-base-100 shadow-sm">
@@ -27,9 +39,7 @@ export default function Layout() {
               className="menu menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to="/favorite">
-                  <a>Watch List</a>
-                </Link>
+                <Link to="/favorite">Watch List</Link>
               </li>
             </ul>
           </div>
@@ -37,5 +47,5 @@ export default function Layout() {
       </div>
       <Outlet />
     </div>
-  )
+  );
 }

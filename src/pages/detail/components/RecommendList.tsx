@@ -1,25 +1,26 @@
-import { useParams } from "react-router"
-import { useRelatedMovies } from "../../../hooks/api/useRelatedMovies"
-import { useConfiguration } from "../../../hooks/useConfiguration"
-import { getTmdbImageUrl } from "../../../utils/tmdbClient"
+import { useParams } from 'react-router';
+import { useRelatedMovies } from '../../../hooks/api/useRelatedMovies';
+import { useConfiguration } from '../../../hooks/useConfiguration';
+import type { Movie } from '../../../types/movie';
+import { getTmdbImageUrl } from '../../../utils/tmdbClient';
 
 export default function RecommendList() {
-  const { data: cfg } = useConfiguration()
-  const { id } = useParams()
+  const { data: cfg } = useConfiguration();
+  const { id } = useParams();
 
-  const { data: relatedMovies } = useRelatedMovies(Number(id))
+  const { data: relatedMovies } = useRelatedMovies(Number(id));
 
   return (
     <div className="m-8 space-y-2">
       <div className="text-2xl font-bold">相关推荐</div>
       <div className="flex gap-4 overflow-x-auto pb-4">
-        {relatedMovies?.results?.map((item) => (
+        {relatedMovies?.results?.map((item: Movie) => (
           <div
             key={item.id}
             className="card min-w-[220px] overflow-hidden bg-base-200 shadow-lg text-center"
           >
             <img
-              src={getTmdbImageUrl(item.backdrop_path, "backdrop", cfg?.images)}
+              src={getTmdbImageUrl(item.backdrop_path, 'backdrop', cfg?.images)}
               alt={item.title}
             />
             <div className="card-body">
@@ -31,5 +32,5 @@ export default function RecommendList() {
         ))}
       </div>
     </div>
-  )
+  );
 }

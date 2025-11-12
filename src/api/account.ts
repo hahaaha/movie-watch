@@ -1,33 +1,48 @@
-import { request } from "../utils/request"
+import { useUserInfoStore } from '../store/useUserInfoStore';
+import { request } from '../utils/request';
+
+function getAccountId() {
+  const accountId = useUserInfoStore.getState().userInfo?.id;
+  return accountId;
+}
+
+export const getAccountDetails = async () => {
+  const response = await request.get('/account');
+  return response.data;
+};
 
 export const addFavoriteMovie = async (data: {
-  media_type: string
-  media_id: number
-  favorite: boolean
+  media_type: string;
+  media_id: number;
+  favorite: boolean;
 }) => {
-  const response = await request.post("/account/22457110/favorite", {
+  const response = await request.post(`/account/${getAccountId()}/favorite`, {
     ...data,
-  })
-  return response.data
-}
+  });
+  return response.data;
+};
 
 export const getFavoriteMovies = async () => {
-  const response = await request.get("/account/22457110/favorite/movies")
-  return response.data
-}
+  const response = await request.get(
+    `/account/${getAccountId()}/favorite/movies`
+  );
+  return response.data;
+};
 
 export const addWatchList = async (data: {
-  media_type: string
-  media_id: number
-  watchlist: boolean
+  media_type: string;
+  media_id: number;
+  watchlist: boolean;
 }) => {
-  const response = await request.post("/account/22457110/watchlist", {
+  const response = await request.post(`/account/${getAccountId()}/watchlist`, {
     ...data,
-  })
-  return response.data
-}
+  });
+  return response.data;
+};
 
 export const getWatchListMovies = async () => {
-  const response = await request.get("/account/22457110/watchlist/movies")
-  return response.data
-}
+  const response = await request.get(
+    `/account/${getAccountId()}/watchlist/movies`
+  );
+  return response.data;
+};
