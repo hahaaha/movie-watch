@@ -74,7 +74,9 @@ export default defineConfig([
 
 ### todo
 
-列表排序
+列表排序 x
 抽奖
 电影列表去重 x
 是否加入观看状态
+img placeholder
+eslint prettier配置

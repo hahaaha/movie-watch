@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
-import { getConfiguration } from '../../../api/configuration';
-import type { Movie } from '../../../types/movie';
-import { getTmdbImageUrl } from '../../../utils/tmdbClient';
+import { getConfiguration } from '../api/configuration';
+import type { Movie } from '../types/movie';
+import { getTmdbImageUrl } from '../utils/tmdbClient';
 
 export default function ListItem({ movie }: { movie: Movie }) {
   const { data: cfg } = useQuery({
