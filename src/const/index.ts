@@ -1,0 +1,1 @@
+export const API_IMAGE_URL = import.meta.env.VITE_TMDB_IMG_URL;
