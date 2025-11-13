@@ -1,14 +1,17 @@
+import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router';
+import { useUserInfo } from './hooks/api/useUserInfo';
+import { useUserInfoStore } from './store/useUserInfoStore';
 
 export default function Layout() {
-  // const { data: userInfo } = useUserInfo();
-  // const { setUserInfo } = useUserInfoStore();
+  const { data: userInfo } = useUserInfo();
+  const { setUserInfo } = useUserInfoStore();
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     setUserInfo(userInfo);
-  //   }
-  // }, [userInfo]);
+  useEffect(() => {
+    if (userInfo) {
+      setUserInfo(userInfo);
+    }
+  }, [userInfo]);
 
   return (
     <div className="min-h-screen flex flex-col">
