@@ -25,7 +25,7 @@ function App() {
     <div className="flex flex-col flex-1 items-center justify-center">
       <div className="flex items-center">
         <input
-          className="input input-bordered w-full max-w-xs"
+          className="input input-bordered w-[400px] max-md:w-full"
           type="text"
           placeholder="Search for a movie"
           onKeyDown={e => {

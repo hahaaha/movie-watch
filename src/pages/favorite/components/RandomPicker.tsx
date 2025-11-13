@@ -87,9 +87,13 @@ export default function RandomPicker() {
   if (movies.length === 0) {
     return (
       <div className="card bg-base-200 shadow-xl">
-        <div className="card-body items-center text-center">
-          <h2 className="card-title">暂无待看电影</h2>
-          <p>请先添加一些电影到待看列表</p>
+        <div className="card-body items-center text-center p-4 md:p-6">
+          <h2 className="card-title text-lg md:text-xl lg:text-2xl">
+            暂无待看电影
+          </h2>
+          <p className="text-sm md:text-base mt-2">
+            请先添加一些电影到待看列表
+          </p>
         </div>
       </div>
     );
@@ -97,14 +101,14 @@ export default function RandomPicker() {
 
   return (
     <div className="card bg-base-200 shadow-xl">
-      <div className="card-body items-center text-center space-y-4">
-        <h2 className="card-title text-2xl">随机观看</h2>
-        <p className="text-sm opacity-60">
+      <div className="card-body items-center text-center space-y-4 md:space-y-6">
+        <h2 className="card-title text-xl md:text-2xl lg:text-3xl">随机观看</h2>
+        <p className="text-xs md:text-sm opacity-60 px-2">
           从 {movies.length} 部待看电影中随机选择一部
         </p>
 
         <button
-          className={`btn btn-primary btn-lg ${isPicking ? 'loading' : ''}`}
+          className={`btn btn-primary btn-sm md:btn-md lg:btn-lg ${isPicking ? 'loading' : ''}`}
           onClick={handleRandomPick}
           disabled={isPicking || movies.length === 0}
         >
@@ -114,39 +118,44 @@ export default function RandomPicker() {
 
         {selectedMovie && (
           <div
-            className={`card bg-base-100 shadow-xl w-full max-w-md transition-all duration-300 ${
+            className={`card bg-base-100 shadow-xl w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl transition-all duration-300 ${
               isPicking ? 'opacity-50' : 'opacity-100'
             } ${selectedMovie ? 'cursor-pointer hover:scale-105' : ''}`}
             onClick={!isPicking ? goToDetail : undefined}
           >
-            <div className="card-body">
-              <div className="flex gap-4">
+            <div className="card-body p-4 md:p-6">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                 {cfg?.images && selectedMovie.poster_path && (
-                  <img
-                    width={120}
-                    className="rounded-lg"
-                    src={getTmdbImageUrl(
-                      selectedMovie.poster_path,
-                      'poster',
-                      cfg.images
-                    )}
-                    alt={selectedMovie.title}
-                  />
+                  <div className="flex justify-center sm:justify-start shrink-0">
+                    <img
+                      className="w-[100px] sm:w-[120px] md:w-[140px] h-auto rounded-lg"
+                      src={getTmdbImageUrl(
+                        selectedMovie.poster_path,
+                        'poster',
+                        cfg.images
+                      )}
+                      alt={selectedMovie.title}
+                    />
+                  </div>
                 )}
-                <div className="flex-1 space-y-2">
-                  <h3 className="card-title text-xl">{selectedMovie.title}</h3>
+                <div className="flex-1 space-y-2 text-left">
+                  <h3 className="card-title text-lg md:text-xl lg:text-2xl">
+                    {selectedMovie.title}
+                  </h3>
                   {selectedMovie.release_date && (
-                    <p className="text-sm opacity-60">
+                    <p className="text-xs md:text-sm opacity-60">
                       {selectedMovie.release_date}
                     </p>
                   )}
                   {selectedMovie.overview && (
-                    <p className="text-xs opacity-70 line-clamp-3">
+                    <p className="text-xs md:text-sm opacity-70 line-clamp-2 md:line-clamp-3">
                       {selectedMovie.overview}
                     </p>
                   )}
                   {!isPicking && (
-                    <p className="text-xs text-primary mt-2">点击查看详情 →</p>
+                    <p className="text-xs md:text-sm text-primary mt-2">
+                      点击查看详情 →
+                    </p>
                   )}
                 </div>
               </div>

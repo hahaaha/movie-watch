@@ -14,14 +14,14 @@ export default function RecommendList() {
 
   return (
     <div className="space-y-2">
-      <div className="text-2xl font-bold">相关推荐</div>
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="text-xl md:text-2xl font-bold">相关推荐</div>
+      <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide">
         {relatedMovies?.results?.map((item: Movie) => (
           <div
             key={item.id}
-            className="card min-w-[220px] overflow-hidden bg-base-200 shadow-lg text-center"
+            className="card min-w-[180px] md:min-w-[220px] overflow-hidden bg-base-200 shadow-lg text-center"
           >
-            <div className="w-[220px] h-[124px] overflow-hidden">
+            <div className="w-[180px] md:w-[220px] h-[101px] md:h-[124px] overflow-hidden">
               {item.backdrop_path && (
                 <img
                   className="object-cover w-full h-full"
@@ -35,12 +35,15 @@ export default function RecommendList() {
               )}
               {!item.backdrop_path && (
                 <div className="w-full h-full bg-base-200 flex items-center justify-center border rounded-lg">
-                  <FontAwesomeIcon icon={faImage} className="text-4xl" />
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    className="text-3xl md:text-4xl"
+                  />
                 </div>
               )}
             </div>
-            <div className="card-body">
-              <div className="text-xs text-ellipsis overflow-hidden line-clamp-1">
+            <div className="card-body p-2 md:p-4">
+              <div className="text-xs md:text-sm text-ellipsis overflow-hidden line-clamp-2">
                 {item.title}
               </div>
             </div>
