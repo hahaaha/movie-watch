@@ -1,6 +1,6 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useConfiguration } from '../../../hooks/api/useConfiguration';
 import { useRelatedMovies } from '../../../hooks/api/useRelatedMovies';
 import type { Movie } from '../../../types/movie';
@@ -9,6 +9,11 @@ import { getTmdbImageUrl } from '../../../utils/tmdbClient';
 export default function RecommendList() {
   const { data: cfg } = useConfiguration();
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  const goToDetail = (id: number) => {
+    navigate(`/detail/${id}`);
+  };
 
   const { data: relatedMovies } = useRelatedMovies(Number(id));
 
@@ -19,7 +24,8 @@ export default function RecommendList() {
         {relatedMovies?.results?.map((item: Movie) => (
           <div
             key={item.id}
-            className="card min-w-[180px] md:min-w-[220px] overflow-hidden bg-base-200 shadow-lg text-center"
+            onClick={() => goToDetail(item.id)}
+            className="cursor-pointer card min-w-[180px] md:min-w-[220px] overflow-hidden bg-base-200 shadow-lg text-center"
           >
             <div className="w-[180px] md:w-[220px] h-[101px] md:h-[124px] overflow-hidden">
               {item.backdrop_path && (

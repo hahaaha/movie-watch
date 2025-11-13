@@ -130,12 +130,14 @@ export default function Detail() {
               )}
             </div>
           )}
-          <div className="">
-            <div className="text-base md:text-lg font-bold mb-1">简介</div>
-            <p className="text-sm md:text-base leading-relaxed">
-              {data?.overview}
-            </p>
-          </div>
+          {data?.overview && (
+            <div className="">
+              <div className="text-base md:text-lg font-bold mb-1">简介</div>
+              <p className="text-sm md:text-base leading-relaxed">
+                {data?.overview}
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
