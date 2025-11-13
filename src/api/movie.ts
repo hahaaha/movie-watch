@@ -28,3 +28,8 @@ export const getRelatedMovies = async (id: number) => {
   );
   return response.data;
 };
+
+export const getMovieReviews = async (id: number) => {
+  const response = await request.get(`/movie/${id}/reviews?language=zh-CN`);
+  return response.data;
+};

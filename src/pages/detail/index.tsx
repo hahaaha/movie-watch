@@ -2,12 +2,15 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { addWatchList } from '../../api/account';
 import { getMovieDetail } from '../../api/movie';
+import CommonError from '../../components/CommonError';
+import { MOVIE_STATUS } from '../../const';
 import { useMovieCredits } from '../../hooks/api/useMovieCredits';
 import { useConfiguration } from '../../hooks/useConfiguration';
 import { calMovieTime } from '../../utils/calMovieTime';
 import { getTmdbImageUrl } from '../../utils/tmdbClient';
 import CastList from './components/CastList';
 import RecommendList from './components/RecommendList';
+import Reviews from './components/Reivews';
 
 export default function Detail() {
   const { id } = useParams();
@@ -38,10 +41,10 @@ export default function Detail() {
   const { data: movieCredits } = useMovieCredits(Number(id));
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <CommonError error={error} />;
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex gap-6 relative p-8">
         <div className="absolute top-0 left-0 w-full h-full -z-10">
           <img
@@ -51,7 +54,7 @@ export default function Detail() {
           />
           <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         </div>
-        <div className="w-[300px]">
+        <div className="w-[300px] shrink-0">
           <img
             src={getTmdbImageUrl(data?.poster_path, 'poster', cfg?.images)}
             alt={data?.title}
@@ -83,11 +86,33 @@ export default function Detail() {
           </div>
         </div>
       </div>
-      <div className="m-8 space-y-2">
-        <div className="text-2xl font-bold">演员表</div>
-        <CastList list={movieCredits?.cast} />
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-8 py-8">
+          <div className="flex-1 min-w-0">
+            <div className="space-y-8">
+              <CastList list={movieCredits?.cast} />
+              <Reviews />
+              <RecommendList />
+            </div>
+          </div>
+          <div className="w-full lg:w-[280px] lg:shrink-0">
+            <div className="sticky top-4">
+              <div className="space-y-2">
+                <div className="">
+                  <div className="font-base font-bold">原名</div>
+                  <div className="text-sm">{data?.original_title}</div>
+                </div>
+                {data?.status && (
+                  <div>
+                    <div className="text-base font-bold">状态</div>
+                    <div className="text-sm">{MOVIE_STATUS[data.status]}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <RecommendList />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { useQueryState } from 'nuqs';
 import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getMoviesList } from '../../api/movie';
+import CommonError from '../../components/CommonError';
 import ListItem from '../../components/ListItem';
 import type { Movie } from '../../types/movie';
 
@@ -54,13 +55,7 @@ export default function Search() {
       </div>
     );
   }
-  if (error) {
-    return (
-      <div className="flex flex-col flex-1 items-center justify-center">
-        <div>Error: {(error as Error).message}</div>
-      </div>
-    );
-  }
+  if (error) return <CommonError error={error} />;
 
   const handleSearch = () => {
     setQuery(inputValue);

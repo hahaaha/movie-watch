@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getWatchListMovies } from '../../api/account';
+import CommonError from '../../components/CommonError';
 import ListItem from '../../components/ListItem';
 import type { Movie } from '../../types/movie';
 import RandomPicker from './components/RandomPicker';
@@ -22,7 +23,7 @@ export default function Favorite() {
   });
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (error) return <CommonError error={error} />;
 
   return (
     <div>

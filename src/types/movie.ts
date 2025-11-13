@@ -1,3 +1,5 @@
+import type { MovieStatus } from '../const';
+
 export interface Movie {
   id: number;
   title: string;
@@ -8,6 +10,9 @@ export interface Movie {
   vote_average: number | null;
   genres: Genre[];
   runtime: number | null;
+  original_title: string | null;
+  status: MovieStatus | null;
+  original_language: string | null;
 }
 
 export interface Cast {
@@ -20,4 +25,10 @@ export interface Cast {
 export interface Genre {
   id: number;
   name: string;
+}
+
+export interface Review {
+  id: string;
+  author: string;
+  content: string;
 }

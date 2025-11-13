@@ -11,7 +11,7 @@ export default function RecommendList() {
   const { data: relatedMovies } = useRelatedMovies(Number(id));
 
   return (
-    <div className="m-8 space-y-2">
+    <div className="space-y-2">
       <div className="text-2xl font-bold">相关推荐</div>
       <div className="flex gap-4 overflow-x-auto pb-4">
         {relatedMovies?.results?.map((item: Movie) => (
