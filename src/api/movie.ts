@@ -33,3 +33,10 @@ export const getMovieReviews = async (id: number) => {
   const response = await request.get(`/movie/${id}/reviews?language=zh-CN`);
   return response.data;
 };
+
+export const getAccountStates = async (id: number) => {
+  const response = await request.get(
+    `/movie/${id}/account_states?language=zh-CN`
+  );
+  return response.data;
+};

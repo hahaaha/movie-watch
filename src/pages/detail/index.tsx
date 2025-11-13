@@ -1,9 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { addWatchList } from '../../api/account';
 import { getMovieDetail } from '../../api/movie';
 import CommonError from '../../components/CommonError';
 import { MOVIE_STATUS } from '../../const';
+import { useAccountStates } from '../../hooks/api/useAccountStates';
 import { useMovieCredits } from '../../hooks/api/useMovieCredits';
 import { useConfiguration } from '../../hooks/useConfiguration';
 import { calMovieTime } from '../../utils/calMovieTime';
@@ -15,11 +17,18 @@ import Reviews from './components/Reivews';
 export default function Detail() {
   const { id } = useParams();
   const { data: cfg } = useConfiguration();
+  const [isWatchlist, setIsWatchlist] = useState<boolean | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['movieDetail', id],
     queryFn: () => getMovieDetail(Number(id)),
   });
+
+  const { data: accountStates } = useAccountStates(Number(id));
+
+  useEffect(() => {
+    setIsWatchlist(accountStates?.watchlist ?? null);
+  }, [accountStates]);
 
   const { mutate } = useMutation({
     mutationFn: (data: {
@@ -36,8 +45,18 @@ export default function Detail() {
       media_id: Number(id),
       watchlist: true,
     });
+    setIsWatchlist(true);
   };
 
+  const removeFromWatchlist = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    mutate({
+      media_type: 'movie',
+      media_id: Number(id),
+      watchlist: false,
+    });
+    setIsWatchlist(false);
+  };
   const { data: movieCredits } = useMovieCredits(Number(id));
 
   if (isLoading) return <div>Loading...</div>;
@@ -75,11 +94,20 @@ export default function Detail() {
             </div>
           </div>
 
-          <div>
-            <div onClick={addToFavorite} className="btn btn-primary">
-              加入待看
+          {isWatchlist !== null && (
+            <div>
+              {!isWatchlist && (
+                <div onClick={addToFavorite} className="btn btn-primary">
+                  加入待看
+                </div>
+              )}
+              {isWatchlist && (
+                <div onClick={removeFromWatchlist} className="btn">
+                  取消待看
+                </div>
+              )}
             </div>
-          </div>
+          )}
           <div className="">
             <div className="text font-bold">简介</div>
             <p className="text-sm">{data?.overview}</p>
