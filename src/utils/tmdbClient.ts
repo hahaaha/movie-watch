@@ -27,7 +27,7 @@ export function getTmdbImageUrl(
   cfg: TmdbImageConfig,
   sizeIndex?: number
 ): string {
-  if (!path) return '/images/placeholder.svg';
+  if (!path) return '';
 
   const base = cfg.secure_base_url;
 
