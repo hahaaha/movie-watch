@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import { addWatchList } from '../../api/account';
 import { getMovieDetail } from '../../api/movie';
 import CommonError from '../../components/CommonError';
+import GlobalLoading from '../../components/GlobalLoading';
 import { MOVIE_STATUS } from '../../const';
 import { useAccountStates } from '../../hooks/api/useAccountStates';
 import { useMovieCredits } from '../../hooks/api/useMovieCredits';
@@ -59,18 +60,24 @@ export default function Detail() {
   };
   const { data: movieCredits } = useMovieCredits(Number(id));
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <GlobalLoading />;
   if (error) return <CommonError error={error} />;
 
   return (
     <div className="w-full">
       <div className="flex gap-6 relative p-8">
         <div className="absolute top-0 left-0 w-full h-full -z-10">
-          <img
-            className="object-cover w-full h-full object-top blur-xs"
-            src={getTmdbImageUrl(data?.backdrop_path, 'backdrop', cfg?.images)}
-            alt={data?.title}
-          />
+          {data?.backdrop_path && (
+            <img
+              className="object-cover w-full h-full object-top blur-xs"
+              src={getTmdbImageUrl(
+                data?.backdrop_path,
+                'backdrop',
+                cfg?.images
+              )}
+              alt={data?.title}
+            />
+          )}
           <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         </div>
         <div className="w-[300px] shrink-0">

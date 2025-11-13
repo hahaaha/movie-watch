@@ -1,3 +1,5 @@
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useQuery } from '@tanstack/react-query';
 import { getConfiguration } from '../../../api/configuration';
 import type { Cast } from '../../../types/movie';
@@ -18,12 +20,26 @@ export default function CastList({ list }: { list: Cast[] }) {
             key={item.id}
             className="card min-w-[150px] overflow-hidden bg-base-200 shadow-lg text-center"
           >
-            <img
-              src={getTmdbImageUrl(item.profile_path, 'profile', cfg?.images)}
-              alt={item.name}
-            />
+            <div className="w-[150px] h-[225px] overflow-hidden">
+              {item.profile_path && (
+                <img
+                  src={getTmdbImageUrl(
+                    item.profile_path,
+                    'profile',
+                    cfg?.images
+                  )}
+                  className="object-cover w-full h-full"
+                  alt={item.name}
+                />
+              )}
+              {!item.profile_path && (
+                <div className="w-full h-full bg-base-200 flex items-center justify-center border rounded-lg">
+                  <FontAwesomeIcon icon={faUser} className="text-4xl" />
+                </div>
+              )}
+            </div>
             <div className="card-body">
-              <div className="text-lg font-bold">{item.name}</div>
+              <div className="text-base font-bold">{item.name}</div>
               <div className="text-sm opacity-60">{item.character}</div>
             </div>
           </div>

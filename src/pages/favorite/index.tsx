@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { getWatchListMovies } from '../../api/account';
 import CommonError from '../../components/CommonError';
+import GlobalLoading from '../../components/GlobalLoading';
 import ListItem from '../../components/ListItem';
 import type { Movie } from '../../types/movie';
 import RandomPicker from './components/RandomPicker';
@@ -22,7 +23,7 @@ export default function Favorite() {
     queryFn: () => getWatchListMovies({ sort_by: sortBy }),
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <GlobalLoading />;
   if (error) return <CommonError error={error} />;
 
   return (

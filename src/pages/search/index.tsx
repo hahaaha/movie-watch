@@ -10,6 +10,7 @@ import { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getMoviesList } from '../../api/movie';
 import CommonError from '../../components/CommonError';
+import GlobalLoading from '../../components/GlobalLoading';
 import ListItem from '../../components/ListItem';
 import type { Movie } from '../../types/movie';
 
@@ -48,13 +49,7 @@ export default function Search() {
     return dayjs(a.release_date).diff(dayjs(b.release_date));
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col flex-1 items-center justify-center">
-        <span className="loading loading-dots loading-xl"></span>
-      </div>
-    );
-  }
+  if (isLoading) return <GlobalLoading />;
   if (error) return <CommonError error={error} />;
 
   const handleSearch = () => {
