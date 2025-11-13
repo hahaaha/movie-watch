@@ -75,13 +75,23 @@ export default defineConfig([
 ### todo
 
 列表排序 x
+
 抽奖 x
+
 电影列表去重 x
+
 是否加入观看状态 x
+
 img placeholder x
+
 eslint prettier配置 x
+
 错误处理 x
+
 响应式
+
 评论 x
+
 zod
+
 单元测试 x
