@@ -1,8 +1,8 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router';
+import { useConfiguration } from '../../../hooks/api/useConfiguration';
 import { useRelatedMovies } from '../../../hooks/api/useRelatedMovies';
-import { useConfiguration } from '../../../hooks/useConfiguration';
 import type { Movie } from '../../../types/movie';
 import { getTmdbImageUrl } from '../../../utils/tmdbClient';
 

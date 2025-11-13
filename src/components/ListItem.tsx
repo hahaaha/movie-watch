@@ -1,13 +1,13 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getConfiguration } from '../api/configuration';
 import type { Movie } from '../types/movie';
 import { getTmdbImageUrl } from '../utils/tmdbClient';
 
-export default function ListItem({ movie }: { movie: Movie }) {
+function ListItem({ movie }: { movie: Movie }) {
   const { data: cfg } = useQuery({
     queryKey: ['tmdbConfig'],
     queryFn: getConfiguration,
@@ -15,10 +15,38 @@ export default function ListItem({ movie }: { movie: Movie }) {
   });
 
   const [imageLoaded, setImageLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const imageUrl =
+    cfg?.images && movie?.poster_path
+      ? getTmdbImageUrl(movie.poster_path, 'poster', cfg.images)
+      : null;
 
   useEffect(() => {
     setImageLoaded(false);
-  }, [movie?.id, movie?.poster_path]);
+  }, [movie?.id, movie?.poster_path, imageUrl]);
+
+  // 检查图片是否已经从缓存中加载完成
+  useEffect(() => {
+    if (!imageUrl) return;
+
+    // 使用 setTimeout 确保在 DOM 更新后检查
+    const checkImageLoaded = () => {
+      if (imgRef.current) {
+        // 如果图片已经加载完成（从缓存中），立即设置 loaded 状态
+        if (imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+          setImageLoaded(true);
+        }
+      }
+    };
+
+    // 立即检查一次
+    checkImageLoaded();
+
+    // 如果还没加载，等待下一个事件循环再检查一次
+    const timer = setTimeout(checkImageLoaded, 0);
+
+    return () => clearTimeout(timer);
+  }, [imageUrl]);
 
   const navigate = useNavigate();
 
@@ -37,13 +65,15 @@ export default function ListItem({ movie }: { movie: Movie }) {
           (cfg?.images && movie?.poster_path && !imageLoaded)) && (
           <div className="skeleton h-full w-full absolute inset-0"></div>
         )}
-        {cfg?.images && movie?.poster_path && (
+        {imageUrl && (
           <img
+            ref={imgRef}
             className={`object-cover w-full h-full ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             width={100}
-            src={getTmdbImageUrl(movie.poster_path, 'poster', cfg?.images)}
+            src={imageUrl}
             alt={movie.title}
             onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(false)}
           />
         )}
         {cfg?.images && !movie?.poster_path && (
@@ -62,3 +92,5 @@ export default function ListItem({ movie }: { movie: Movie }) {
     </li>
   );
 }
+
+export default memo(ListItem);
