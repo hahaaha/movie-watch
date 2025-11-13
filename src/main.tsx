@@ -6,13 +6,13 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import App from './App.tsx';
 import GlobalError from './components/GlobalError.tsx';
-import NotFound from './components/NotFound.tsx';
 import { queryClient } from './config/index.ts';
 import './index.css';
 import Layout from './Layout.tsx';
 const Detail = lazy(() => import('./pages/detail/index.tsx'));
 const Search = lazy(() => import('./pages/search/index.tsx'));
 const Favorite = lazy(() => import('./pages/favorite/index.tsx'));
+const NotFound = lazy(() => import('./components/NotFound.tsx'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
