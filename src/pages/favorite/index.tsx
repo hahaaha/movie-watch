@@ -4,8 +4,9 @@ import {
   faShuffle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { getWatchListMovies } from '../../api/account';
 import CommonError from '../../components/CommonError';
 import GlobalLoading from '../../components/GlobalLoading';
@@ -18,10 +19,29 @@ export default function Favorite() {
     'created_at.asc'
   );
   const [showRandomPicker, setShowRandomPicker] = useState(false);
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['watchListMovies', sortBy],
-    queryFn: () => getWatchListMovies({ sort_by: sortBy }),
-  });
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetching } =
+    useInfiniteQuery({
+      queryKey: ['watchListMovies', { sortBy }],
+      queryFn: ({ pageParam }) =>
+        getWatchListMovies({ sort_by: sortBy, page: pageParam }),
+      getNextPageParam: lastPage => {
+        if (lastPage.page < lastPage.total_pages) {
+          return lastPage.page + 1;
+        }
+        return undefined;
+      },
+      initialPageParam: 1,
+      select: data => {
+        const allItems = data?.pages?.flatMap(page => page.results);
+
+        return {
+          pages: { items: allItems ?? [] },
+          pageParams: data.pageParams,
+        };
+      },
+    });
+
+  const movies = useMemo(() => data?.pages?.items ?? [], [data?.pages?.items]);
 
   if (isLoading) return <GlobalLoading />;
   if (error) return <CommonError error={error} />;
@@ -60,9 +80,20 @@ export default function Favorite() {
         </div>
       </div>
       <ul className="list p-8">
-        {data?.results.map((movie: Movie) => (
-          <ListItem key={movie.id} movie={movie} />
-        ))}
+        <InfiniteScroll
+          dataLength={movies.length}
+          next={fetchNextPage}
+          hasMore={hasNextPage && !isFetching}
+          loader={
+            <div className="flex justify-center items-center">
+              <span className="loading loading-dots loading-xl"></span>
+            </div>
+          }
+        >
+          {movies.map((movie: Movie) => (
+            <ListItem key={movie.id} movie={movie} />
+          ))}
+        </InfiniteScroll>
       </ul>
 
       {/* 随机抽奖弹窗 */}

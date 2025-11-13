@@ -1,7 +1,7 @@
 import { faShuffle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getWatchListMovies } from '../../../api/account';
 import { getConfiguration } from '../../../api/configuration';
@@ -13,10 +13,30 @@ export default function RandomPicker() {
   const [isPicking, setIsPicking] = useState(false);
   const navigate = useNavigate();
 
-  const { data: moviesData } = useQuery({
-    queryKey: ['watchListMovies', 'created_at.asc'],
-    queryFn: () => getWatchListMovies({ sort_by: 'created_at.asc' }),
+  const {
+    data: moviesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['watchListMovies', 'randomPicker', 'created_at.asc'],
+    queryFn: ({ pageParam }) =>
+      getWatchListMovies({ sort_by: 'created_at.asc', page: pageParam }),
+    getNextPageParam: lastPage => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
   });
+
+  // 自动获取所有页面
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const { data: cfg } = useQuery({
     queryKey: ['tmdbConfig'],
@@ -24,7 +44,9 @@ export default function RandomPicker() {
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  const movies = moviesData?.results || [];
+  const movies = useMemo(() => {
+    return moviesData?.pages?.flatMap(page => page.results) || [];
+  }, [moviesData?.pages]);
 
   const handleRandomPick = () => {
     if (movies.length === 0) {

@@ -40,13 +40,17 @@ export const addWatchList = async (data: {
   return response.data;
 };
 
-export const getWatchListMovies = async (params: { sort_by: string }) => {
+export const getWatchListMovies = async (params: {
+  sort_by: string;
+  page?: number;
+}) => {
   const response = await request.get(
     `/account/${getAccountId()}/watchlist/movies`,
     {
       params: {
         language: 'zh-CN',
         sort_by: params.sort_by,
+        page: params.page,
       },
     }
   );
